@@ -122,6 +122,19 @@
       display: block;
     }
 
+    .are-you-sure {
+     display: none;
+     margin-top: 14px;
+     font-size: 15px;
+     color: #444;
+     animation: fadeIn 0.4s ease;
+    }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
     @keyframes pop {
       from { transform: scale(.96); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
@@ -181,11 +194,13 @@
     <!-- HINT -->
     <div class="hint" id="hint">“No” seems a bit shy 😈</div>
 
+    <div class="are-you-sure" id="areYouSure">Are you sure? 😢</div>
+
     <section class="result" id="result">
       <h2>YAY! 🎉</h2>
       <img
         class="fireworks"
-        src="https://wifflegif.com/gifs/629081-best-relationship-i-need-your-love-gif"
+        src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gi"
         alt="Fireworks"
       />
     </section>
@@ -246,7 +261,7 @@
     /* ---------- YES BUTTON GROWS ---------- */
     let yesScale = 1;
     function growYes() {
-      yesScale = Math.min(5.2, yesScale + 0.1);
+      yesScale = Math.min(3.2, yesScale + 0.1);
       yesBtn.style.transform = `translateY(-50%) scale(${yesScale})`;
     }
 
@@ -287,7 +302,39 @@
       if (d < 140) moveNo(e.clientX, e.clientY);
     });
 
-    noBtn.addEventListener("click", e => e.preventDefault());
+   let noClickCount = 0;
+const areYouSureText = [
+  "Are you sure? 😢",
+  "Are you really sure? 😟",
+  "Think again... 😬",
+  "This hurts 😖",
+  "Too late 😅"
+];
+
+noBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (noClickCount < areYouSureText.length) {
+    // Shrink the button
+    const scale = 1 - noClickCount * 0.15;
+    noBtn.style.transform = `scale(${Math.max(scale, 0.4)})`;
+
+    // Show or update the message
+    const msg = document.getElementById("areYouSure");
+    msg.style.display = "block";
+    msg.innerText = areYouSureText[noClickCount];
+
+    noClickCount++;
+
+    // After final message, disable button
+    if (noClickCount === areYouSureText.length) {
+      noBtn.disabled = true;
+      noBtn.style.opacity = 0.6;
+      noBtn.style.cursor = "not-allowed";
+    }
+  }
+});
+
 
     /* ---------- YES CLICK ---------- */
     yesBtn.addEventListener("click", () => {
@@ -300,6 +347,7 @@
   </script>
 </body>
 </html>
+
 
 
 
